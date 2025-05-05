@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Info Form</title>
+  <style>
+    /* Background Gradient with Animation */
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(45deg, #8ecae6, #219ebc, #023047);
+      background-size: 400% 400%;
+      animation: gradientAnimation 10s ease infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      color: white;
+    }
+
+    /* Header Styling */
+    h1 {
+      color: #fff;
+      margin-bottom: 30px;
+      font-size: 36px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 2s ease-out;
+    }
+
+    /* Form Styling */
+    form {
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+      border: 2px solid #219ebc;
+      animation: slideIn 1s ease-out;
+    }
+
+    /* Input Fields and Button Styling */
+    input, textarea {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 2px solid #219ebc;
+      font-size: 16px;
+      box-sizing: border-box;
+      transition: all 0.3s ease-in-out;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #023047;
+      outline: none;
+    }
+
+    textarea {
+      height: 150px;
+      resize: none;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 14px;
+      background-color: #219ebc;
+      color: white;
+      border: none;
+      font-size: 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #023047;
+    }
+
+    /* Success/Error Message Styling */
+    #responseMessage {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 16px;
+      color: #333;
+    }
+
+    #responseMessage.success {
+      color: #388e3c;
+      font-size: 18px;
+    }
+
+    #responseMessage.error {
+      color: #d32f2f;
+      font-size: 18px;
+    }
+
+    /* Animation for Background Gradient */
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Fade In Animation for Heading */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Slide In Animation for Form */
+    @keyframes slideIn {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      form {
+        padding: 20px;
+        width: 90%;
+      }
+
+      button {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1><u>Contact Info</u></h1>
+  <form id="contactForm">
+    <input type="text" id="name" placeholder="Name" required><br>
+    <input type="email" id="email" placeholder="Email" required><br>
+    <textarea id="message" placeholder="Your Message" required></textarea><br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <p id="responseMessage"></p>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+
+      try {
+        const response = await fetch('http://localhost:3000/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, message })
+        });
+
+        const data = await response.json();
+        document.getElementById('responseMessage').innerText = data.message || "Form submitted successfully!";
+        document.getElementById('responseMessage').classList.add('success');
+      } catch (error) {
+        document.getElementById('responseMessage').innerText = "Error submitting form.";
+        document.getElementById('responseMessage').classList.add('error');
+      }
+    });
+  </script>
+</body>
+</html>
